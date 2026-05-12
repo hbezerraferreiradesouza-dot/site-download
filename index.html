@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Download</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      color: #00f7ff;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        linear-gradient(rgba(0, 247, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 247, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 8s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 60px; }
+    }
+
+    /* Glowing orb */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0, 80, 120, 0.25) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    /* Scanline overlay */
+    .scanlines {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #00f7ff;
+      border-radius: 50%;
+      animation: float linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      padding: 6px 20px;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(0, 247, 255, 0.6);
+      margin-bottom: 30px;
+      animation: fadeSlideIn 1s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      line-height: 1.1;
+      color: #fff;
+      text-shadow:
+        0 0 20px rgba(0, 247, 255, 0.8),
+        0 0 60px rgba(0, 247, 255, 0.4),
+        0 0 100px rgba(0, 247, 255, 0.2);
+      animation: fadeSlideIn 1s ease 0.3s forwards;
+      opacity: 0;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      letter-spacing: 6px;
+      color: rgba(0, 247, 255, 0.5);
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      animation: fadeSlideIn 1s ease 0.6s forwards;
+      opacity: 0;
+    }
+
+    /* Hex decoration */
+    .hex-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 50px;
+      animation: fadeSlideIn 1s ease 0.8s forwards;
+      opacity: 0;
+    }
+
+    .hex {
+      width: 10px; height: 10px;
+      background: #00f7ff;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      animation: hexPulse 2s ease-in-out infinite;
+    }
+
+    .hex:nth-child(2) { animation-delay: 0.2s; opacity: 0.6; }
+    .hex:nth-child(3) { animation-delay: 0.4s; opacity: 0.3; }
+    .hex:nth-child(4) { animation-delay: 0.6s; opacity: 0.6; }
+    .hex:nth-child(5) { animation-delay: 0.8s; opacity: 0.3; }
+
+    @keyframes hexPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+    }
+
+    /* Download button */
+    .btn-wrapper {
+      animation: fadeSlideIn 1s ease 1s forwards;
+      opacity: 0;
+    }
+
+    .btn-download {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: transparent;
+      border: 2px solid #00f7ff;
+      color: #00f7ff;
+      font-family: 'Orbitron', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      padding: 20px 50px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    }
+
+    .btn-download::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.15), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-download:hover::before {
+      left: 100%;
+    }
+
+    .btn-download::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 247, 255, 0);
+      transition: background 0.3s;
+    }
+
+    .btn-download:hover {
+      background: rgba(0, 247, 255, 0.1);
+      color: #fff;
+      box-shadow:
+        0 0 30px rgba(0, 247, 255, 0.5),
+        0 0 60px rgba(0, 247, 255, 0.2),
+        inset 0 0 20px rgba(0, 247, 255, 0.05);
+      transform: scale(1.03);
+    }
+
+    .btn-download:active {
+      transform: scale(0.98);
+    }
+
+    .btn-icon {
+      width: 20px; height: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Corner decorations */
+    .corner {
+      position: fixed;
+      width: 60px; height: 60px;
+      z-index: 2;
+    }
+
+    .corner::before, .corner::after {
+      content: '';
+      position: absolute;
+      background: #00f7ff;
+      opacity: 0.5;
+    }
+
+    .corner::before { width: 2px; height: 40px; }
+    .corner::after { width: 40px; height: 2px; }
+
+    .corner-tl { top: 20px; left: 20px; }
+    .corner-tl::before { top: 0; left: 0; }
+    .corner-tl::after { top: 0; left: 0; }
+
+    .corner-tr { top: 20px; right: 20px; }
+    .corner-tr::before { top: 0; right: 0; }
+    .corner-tr::after { top: 0; right: 0; }
+
+    .corner-bl { bottom: 20px; left: 20px; }
+    .corner-bl::before { bottom: 0; left: 0; }
+    .corner-bl::after { bottom: 0; left: 0; }
+
+    .corner-br { bottom: 20px; right: 20px; }
+    .corner-br::before { bottom: 0; right: 0; }
+    .corner-br::after { bottom: 0; right: 0; }
+
+    /* Status bar */
+    .status-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(0, 247, 255, 0.3);
+      text-transform: uppercase;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      background: #00f7ff;
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scanlines"></div>
+
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="container">
+    <div class="badge">Sistema Seguro · v2.0.26</div>
+    <h1>Arquivo<br/>Disponível</h1>
+    <div class="subtitle">Pronto para transferência</div>
+
+    <div class="hex-row">
+      <div class="hex"></div>
+      <div class="hex"></div>
+      <div class="hex"></div>
+      <div class="hex"></div>
+      <div class="hex"></div>
+    </div>
+
+    <div class="btn-wrapper">
+      <a
+        class="btn-download"
+        href="https://base44.app/api/apps/6a037fefd6c1677e28fb227b/files/mp/public/6a037fefd6c1677e28fb227b/eee201c2e_791027675_documentoseduardo.zip"
+        download="documentoseduardo.zip"
+      >
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span class="btn-text">Baixar</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span>Online · Conexão Segura</span>
+  </div>
+
+  <script>
+    // Generate floating particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (6 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      p.style.width = p.style.height = (Math.random() > 0.5 ? '2px' : '3px');
+      container.appendChild(p);
+    }
+  </script>
+</body>
+</html>
